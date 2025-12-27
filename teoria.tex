@@ -1,0 +1,395 @@
+\documentclass[titlepage]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{images/}
+\usepackage{makeidx}
+\author{Carlos Urquiza}
+\title{Trabajo sobre \\ capa de aplicación}
+\begin{document}
+
+\maketitle
+
+\section*{Introducción}
+
+La capa de Aplicaciones es aquella que justifica la existencia de internet, tenemos
+los protocolos para utilizar aplicaciones de redes. Vamos a ver que servicios y arquitecturas usan.
+En cierta medida también el protocolo HTTP.
+Una aplicación muy conocida en redes es, justamente web.
+
+
+\begin{itemize}
+    \item Email.
+    \item Web.
+    \item Mensajeria instantanea.
+    \item Login remoto.
+    \item Compartición de archivos P2P.
+    \item Juegos de red multiusuario.
+    \item Reproducción de videos almacenados (Youtube, netflix).
+    \item Computación paralela.
+    \item Conferencias de video. (Meet)
+\end{itemize}
+
+\subsubsection*{¿Qué cosas necesito para hacer una aplicación de red?}
+En un principio, hay que crear un programa que sea capaz de correr en distintos dispositivos que querramos usar.
+Si queremos hacer un modelo web, como una pagina hay que desarrollar un cliente y un servidor.
+Si necesito una applicación peer to peer, hay que crear cada uno de los modulos y un programa que sea capaz de compactar todos estos.
+
+Es importante notar que lo importante no es que se desarrolle en los dispositivos intermedios, si no en los dispositivos terminales.
+¿Por qué? Porque esto se abstrae y se asume que ya funciona, es parte de todo el trabajo que hicimos con todas las capas anteriores.
+
+\subsection{Arquitecturas de aplicación}
+
+A la hora de pensar cómo sería una aplicación, conviene pensar cual sería la arquitectura de la aplicación.
+
+¿Será cliente servidor? ¿Será peer to peer? ¿Será un hibrido?- Primero debemos saber qué es cada una de estas arquitecturas.
+Recordemos, la arquitectura de la aplicación $ \neq $ arquitectura de la red. 
+
+\subsubsection*{Cliente servidor.}
+
+En la arquitectura cliente servidor tenemos un servicio muy claro, un cliente, junto a un servidor
+que está conectado 24/7 para asegurar la calidad del servicio. El cliente le manda una solicitud al servidor y el servidor le responde.
+
+En el caso de la IP, en el servidor es permanente, ya que sirve para que el cliente siempre sepa a donde ir.
+En cambio, en el cliente no es necesariamente así, puede ser una IP dinamica. 
+
+Cuando se necesitan hacer operaciones complejas, como redes sociales, plataformas grandes, y otros se pueden conectar varios servidores para hacer un \textbf{cluster}.
+Esto permite a los servidores poder aceptar todas las solicitudes que se necesiten en tiempo y forma y no hacer esperar a los clientes. 
+En otra jerga se dice que es \textbf{escalable}. Lo que significa que uno puede extender la operación (tener más clientes) sin perder calidad (tiempo de espera).
+
+Una ultima caracteristica es que para conectarse ambos clientes, deben pasar por el servidor, y no entre sí.
+
+\subsubsection*{Arquitectura peer to peer.}
+
+En este caso, los host se conectan entre sí. Acá no hay dependencia de infrasestructura, en cambio, se explota 
+la comunicación directa entre pares (peers). Una caracteristica de la arquitectura peer to peer es su autoescalabilidad.
+
+Agregar un nodo en la red hace que haya más carga, pero, a la vez añade servicio. Pero como contra añade falta de seguridad, rendimiento y fiabilidad.
+
+Esto es una razón por la que no se usan tanto comercialmente.
+Ejemplos de peer to peer son BitTorrent, Xunlei.
+
+\subsubsection*{Arquitectura hibrida}
+
+Dado los errores anteriormente mencionados, surje la idea de hacer hibridos que traten de asegurar mejor seguridad.
+Se usa un servidor central que crea sesiones entre ambos peers. De forma que podamos tratar de reducir costos y tratar de permitir más seguridad.
+Este modelo es el que tenía skype, pero luego de años terminó quedando en cliente servidor.
+
+\subsubsection*{Por qué siempre cliente-servidor en la actualidad}
+
+Skype trató de hacer un servicio con peer to peer pero tuvo problemas: 
+
+\begin{itemize}
+    \item CGNAT
+    \item Los firewalls restrictivos
+    \item Redes moviles
+    \item Dificultad a la hora de interceptar tráfico malicioso
+    \item Complicaciones a la hora de cumplir leyes (retención de datos, abuso, spam)
+\end{itemize}
+
+En la epoca en la que se planteó Skype, estas cosas no eran problemas, se tenía ipv4, y routers simples. En cambio con el tiempo se volvió
+más y más inseguro. 
+
+
+Con el cambio a cliente servidor, se veía una inversión más grande pero también se veía:
+\begin{itemize}
+    \item Suscripciones.
+    \item Grabaciones.
+    \item Integración empresarial.
+    \item Publicidad.
+    \item Analíticas.
+\end{itemize}
+
+Por esto, skype vió una oportunidad en el cliente servidor, y se decidió hacer un cambio de arquitectura.
+
+\subsection{Procesos de la capa de aplicación.}
+
+Cuando hablamos de programas que se comunican entre sí, en realidad hablamos de comunciación entre procesos.
+La comunicación de procesos puede surgir en un host o entre host, 
+los primeros son arbitrados por un sistema operativo, y los segundos por la red.
+
+\subsubsection*{Procesos entre cliente y servidor.}
+Una aplicación de red consta de parejas de procesos que se envían mensajes entre sí a través de una
+red. Si tenemos una red peer to peer, podemos designarle a un nodo el cliente, y al otro servidor, o a veces ambos a la vez como en skype.
+A veces va a ser dificil saber quien es el cliente y el servidor, para esto podemos hacer una regla especifica:
+
+En el contexto de una sesión de comunicación entre una pareja de procesos, el proceso que
+inicia la comunicación (es decir, que inicialmente se pone en contacto con el otro proceso al principio de la sesión) se designa como el cliente. El proceso que espera a ser contactado para
+comenzar la sesión es el servidor.
+
+\subsubsection*{Comunicacion de procesos.}
+
+Los procesos se envian mensajes a través de sockets. Los sockets son una interfaz que transforma la información
+de capa de aplicación a la capa de transporte. 
+
+\subsubsection*{Protocolos de la capa de aplicación.}
+
+Definen el tipo de mensaje a tener:
+\begin{itemize}
+    \item El formato de los request como la respuesta de los procesos que corre en los host.
+    \item Cómo se delimita los campos
+    \item La semantica de los campos
+    \item Las reglas o el flujo de los mensajes entre los procesos
+\end{itemize}
+
+\subsubsection*{Tipos de protocolo}
+
+Los protocolos publicos y los protocolos privados:
+
+Protocolos de dominio publico:
+
+\begin{itemize}
+    \item Definidos en RFC's 
+    \item Permiten tener inter operatividad.
+    \item Ejemplos son : HTTP, SMTP
+\end{itemize}
+
+Protocolos privados:
+
+\begin{itemize}
+    \item Secretos industriales
+    \item Skype
+\end{itemize}
+ 
+
+Habíamos hablado hace poco sobre sockets, acá cada protocolo debe decidir qué tipo de protocolo de la capa de transporte quiere usar,
+ya que es una decisión que involucra confiabilidad de espera, retardo y tasa de datos.
+\footnote{A partir de acá se habla un poco sobre qué protocolo conviene, si TCP o udp. No me parece necesario ya que se vió en redes 1.}
+
+\subsection{La Web y HTTP}
+
+\subsection*{La Web}
+
+Se debe diferenciar qué es una aplicación de red y cual es el protocolo de la capa que utiliza esa aplicación.
+
+La web es una aplicación cliente servidor que permite al usuario obtener documentos bajo demanda, y esta
+contiene varios "objetos" que lo convierten en algo más que un protocolo.
+
+\begin{itemize}
+    \item Un estandar para los documentos, llamado html.
+    \item Un interpretador de estos documentos, el navegador.
+    \item El protocolo HTTP
+    \item Servidor web, apache, microsoft, etc.
+    \item URI: un tipo de identificador que identifica recursos. Solo promete que identifica un recurso de forma única dentro de algún sistema.
+    \item URL: un subtipo de URI, este indica dónde está el recurso y cómo acceder a el.
+    \item Tanto URI como URL se crearon independientemente ya que no todos los recursos son “navegables”.
+\end{itemize}
+
+\subsubsection*{URI y URL}
+Para hablar de HTTP debemos entender que ambos usan URI's y URL's. Por lo tanto vamos a hacer un breve estudio de estos.
+\\\\
+\includegraphics[width=\textwidth]{images/uri url.png} 
+\footnote{Fuente: HTTPs://bytebytego.com/guides/url-uri-urn-do-you-know-the-differences/}
+\\\\
+
+Una URL tiene 3 componenetes:
+
+\begin{itemize}
+    \item Esquema: Le dice al cliente cómo acceder al recurso, HTTP, HTTPs, file, etc.
+    \item Host : Normalmente, es un nombre de dominio que se traduce luego a una IP mediante un servidor DNS.
+     El puerto se omite ya que se sabe el esquema y el nombre de dominio
+    \item Camino : Identifica recursos en el servidor, se puede ver como un camino en un disco.
+    También puede haber una query o una consulta a una base de datos.
+\end{itemize}
+
+\pagebreak
+
+\subsubsection*{HTTP}
+
+HTTP funciona de una forma relativamente simple, la idea es manejarse con mensajes simples: request y response,
+pero dado que funciona mediante TCP, requiere que se haga una conexión primero.
+
+\begin{enumerate}
+    \item Cliente inicia conexión TCP (crea socket) al servidor, puerto 80 (puede ser otro!)
+    \item Servidor acepta conexión TCP del cliente
+    \item Mensajes HTTP (mensajes del protocolo de capa aplicación) son intercambiados entre browser (cliente HTTP) y servidor Web (servidor HTTP) 
+    \item Se cierra la conexión TCP
+\end{enumerate}
+
+HTTP no mantiene estado de sesión por decisión de diseño,
+lo que simplifica el protocolo y mejora su escalabilidad.
+Esta característica permite que el manejo de estado se implemente de
+forma flexible a nivel de aplicación.
+
+En muchas instancias, el cliente y el servidor pueden estar mucho tiempo
+en comunicación. El cliente puede hacer un conjunto de solicitudes, y el 
+servidor debe responder a este tipo de solicitudes. Dependiendo de la naturaleza
+de las solicitudes pueden ser unas tras otras, en intervalos regulares o esporadicamente.
+
+Como ingeniero, debo ser capaz de elegir una forma de usar el protocolo TCP para
+usarlo inteligentemente, ¿Debo hacer una conexión TCP para todos los mensajes?
+¿o genero una conexión TCP para cada uno de los objetos? 
+
+En el primer caso, estamos hablando de una conexión HTTP persistente. En cambio
+con la segunda, estamos hablando de una conexón HTTP no persistente.\footnote{En HTTP 1.0, por defecto usamos HTTP no persistente,
+en HTTP 1.1, por defecto usamos persistente}
+
+
+\subsubsection*{HTTP persistente vs No persistente}
+El HTTP no persistente debe iniciar una sesión de TCP por cáda comando GET de HTTP.
+En el ejeplo planteado en la filmina:
+\begin{enumerate}
+    \item El cliente HTTP inicia una sesión TCP con el servidor HTTP.
+    \item El servidor HTTP responde ese mensaje TCP aceptando.
+    \item El cliente manda un mensaje de GET al servidor HTTP junto a la dirección del objeto que desea.
+    \item El servidor devuelve una respuesta, que contiene el objeto deseado (si todo sale bien)
+    \item El servidor cierra sesión
+    \item El cliente HTTP recibe el mensaje de respuesta que contiene el archivo HTML y despliega el HTML. Luego ve las referencias que contiene el archivo (imagenes, videos, gif's, etc).
+    \item Repetir los pasos anteriores hasta que no haya referencias para obtener.
+\end{enumerate}
+
+Ahora, en el caso de que solo sea una pagina plana, tendríamos 2 interacciones de cliente y servidor, junto con el tiempo de transmisión de la pagina. En la imagen 2RTT + Tiempo de transmisión de la pagina.
+
+
+\includegraphics[width=\textwidth]{./images/Captura desde 2025-12-22 13-25-18.png}
+
+\subsubsection*{Los modelos persistentes}
+
+Dado que requiere 2RTT + Tiempo de transmisión de pagina / objeto, no es tan eficiente para paginas grandes, además, implica que el sistema operativo debe usar recursos para cada conexión TCP.
+
+Para estos casos, sirve hacer servidores HTTP persistentes. Se deja abierta la conexión TCP y se hacen sucesivas solicitudes y respuestas. 
+
+Hay dos tipos de conexiones persistentes, las que tienen pipelining y las que no. Las que no tienen pipelining mandan un GET y esperan a recibir el elemento para poder mandar otro GET. En cambio, con pipelining se mandan todas las solicitudes seguidas una vez encuentro una referencia. Esto permite acortar los tiempos, y es estandar en HTTP 1.1. 
+
+Ambos en el peor caso ocupan 1 RTT. Mientras que en el mejor caso, la conexión con pipelining puede llegar a costar menos. 
+
+Se puede llegar a elegir la conexión HTTP sin pipelining para no sobrecargar el flujo si hay poca conexión a internet -preguntar, no estoy seguro pero parece plausible.
+
+Como dato en color, hoy en día, en HTTP 2.0, se puede entrelazar múltiples solicitudes y respuestas en la misma conexión, y proporcionar también un mecanismo para priorizar los mensajes de solicitud y respuesta HTTP dentro de dicha conexión.
+
+\subsection{Formato de mensajes HTTP}
+Hay dos tipos de mensajes HTTP. Request y response. Todos funcionan en ASCII.
+
+\subsubsection*{Formato de HTTP request}
+
+\includegraphics[width=0.75\linewidth]{./images/http-message-request.jpg}
+
+El HTTP Request tiene primero la request line, la cual posee:
+\begin{itemize}
+    \item La acción que se quiere hacer 
+    \item El Path de el archivo que necesitamos
+    \item La versión de HTTP
+\end{itemize}
+
+Luego tenemos el header, este contiene:
+\begin{itemize}
+    \item Host: Si bien parece que no hay necesidad de usar esto, ya que por TCP se conocen ambos, se va a usar en cache.
+    
+    \item User agent: Sirve para agregar información sobre qué navegador está usando el host. Esto para poder utilizar una visualización dependiendo que navegador se usa.
+    
+    \item Connection: Sirve para establecer si se usa una conexión persistente o no.
+
+    \item Lenguage: Dice que lenguaje acepto, para que me den una pagina web con mi lenguaje de preferencia en lo posible.
+    
+\end{itemize}
+
+\subsubsection*{Formato de HTTP response}
+\includegraphics[width=0.8\linewidth]{./images/http-message-response.jpg}
+
+Se divide en linea de estatus y esta contiene:
+
+\begin{itemize}
+    \item Protocolo.
+    \item Código de estado (vamos a ver más a detalle en la siguiente subsección).
+    \item Resumen sobre el código de estado.
+\end{itemize}
+
+Encabezado:
+
+\begin{itemize}
+    \item Conexíon: Habla sobre si la conexión TCP se cierra o no.
+    \item Date: El momento en el que se hizo la solicitud al servidor.
+    \item Server: Habla sobre el tipo de servidor que se está corriendo. Analogo a user agent.
+    \item Last modified: Habla sobre la ultima vez que fue modificado el objeto. Sirve para usarse con cache. Si llego a necesitar la información y no cambió, puedo usar todos los archivos que ya tenía y no tengo por qué pedir más.
+    \item Content-Lenght: La cantidad de bytes del objeto requerido.
+    \item Content-Type: El tipo del objeto requerido.
+\end{itemize}
+
+Luego del header vienen todos los datos de lo solicitado.
+
+\subsubsection*{Codigos HTTP de respuesta}
+
+Los codigos de respuesta se pueden ver de la siguiente forma:
+
+\begin{itemize}
+    \item 1xx - Informativo: La solicitud está en curso o hay otro paso que dar.
+    \item 2xx - Exito: La solicitud tuvo éxito. El servidor está enviando los datos que solicitó el cliente.
+    \item 3xx - Redireccionamiento: El servidor le está diciendo al cliente un URI diferente al que debe redirigirse. Los encabezados generalmente contendrán un encabezado de ubicación con el URI actualizado. Diferentes códigos le dicen al cliente si un redireccionamiento es permanente o temporal.
+    \item 4xx - Error del Cliente: El servidor no entendió la solicitud del cliente, o no puede o no quiere procesarla. Los diferentes códigos le dicen al cliente si fue un URI incorrecto, un problema de permisos u otro tipo de error.
+    \item 5xx - Error del Servidor : Algo salió mal del lado del Servidor.
+\end{itemize}
+
+\subsection{Las cookies: Una aplicación de HTTP.}
+
+Para hablar sobre cookies, primero debemos saber cual es la motivación de estas:
+HTTP, por diseño no recuerda nada entre un request y el siguiente. Imaginemos que necesitamos hacer
+un carrito de compras, pero no sabemos cómo guardar la información de lo que quiere comprar el cliente
+¿Qué deberíamos hacer? Podemos usar cookies.
+
+\subsubsection*{¿Qué es una cookie?}
+
+Una cookie es información generada por el servidor web que se guarda en la computadora del usuario y que el navegador envía automáticamente
+al servidor en futuras solicitudes
+
+Nos puede servir para:
+
+\begin{itemize}
+    \item Identificar a un usuario
+    \item Mantener un carrito de compras
+    \item Recordar una sesión iniciada
+\end{itemize}
+
+Una cookie esta compuesta por 4 cosas:
+
+\begin{enumerate}
+    \item Encabezado con \it{Set-Cookie} en la respuesta HTTP.
+    \item Encabezado con \it{Cookie} en la request HTTP.
+    \item Un archivo de cookies en la máquina del usuario
+    \item Una base de datos del sitio web
+\end{enumerate}
+
+\subsection{Servidores proxy: Otra aplicación de HTTP.}
+
+Una web cache (también llamada proxy cache) es un servidor intermedio que se ubica entre el cliente (navegador) y el servidor web original
+Su principal función es: Responder solicitudes web usando copias locales de objetos previamente descargados, evitando contactar al servidor original cuando no es necesario.
+Bajo este punto de vista, el cliente no habla directamente con el servidor web si no que habla con el proxy el proxy decide si puede responder o si debe reenviar la solicitud.
+
+El servidor proxy, es un servidor que actua como cliente y servidor a la vez. Y este:
+
+\begin{itemize}
+    \item Reduce el tiempo de respuesta.
+    \item Reduce el tráfico en el enlace de acceso.
+    \item Beneficia a proveedores pequeños: Internet con caches permite entregar contenido eficientemente sin grandes infraestructuras.
+\end{itemize}
+
+\subsection{Cache}
+
+La idea del cache es almacenar “localmente” datos ya solicitados y así poder acceder a éstos más rápidamente en el futuro.
+\begin{itemize}
+    \item Un problema que debe atender el cache es la obsolescencia que puede tener los datos locales. 
+    \item El cache puede usar tiempos de expiración, o consultar a la fuente por vigencia del dato local.
+\end{itemize}
+
+\subsection{Get condicional}
+
+El GET condicional aparece para resolver un problema propio de las cachés: La caché puede tener una versión vieja de un objeto.
+Por lo tanto, se creó un tipo de GET especial, un GET con condición, en el que preguntamos: ¿Este objeto está actualizado?
+
+\begin{enumerate}
+    \item If-Modified-Since: fecha
+    \item Si esto está actualizado: HTTP/1.0 304 Not Modified
+    \item Si esto no fue actualizado: HTTP/1.0 200 OK (Vuelve con el archivo).
+\end{enumerate}
+
+Qué gana el sistema con esto
+
+Según la lógica de las filminas:
+
+\begin{itemize}
+    \item Menos tráfico de red
+    \item Menor tiempo de respuesta
+    \item Menor carga para el servidor web
+    \item La caché sigue siendo consistente
+\end{itemize}
+
+\end{document}
