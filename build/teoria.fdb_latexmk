@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1766520458.84641 "/home/carlos/Descargas/ecommerce/Resumen_http/teoria.tex" "build/teoria.pdf" "teoria" 1766520459.33125 0
-  "/home/carlos/Descargas/ecommerce/Resumen_http/teoria.tex" 1766520458.64467 19186 746e43c63ded40885eee25635575327f ""
+["pdflatex"] 1767012164.02824 "/home/carlos/Descargas/ecommerce/Resumen_http/teoria.tex" "build/teoria.pdf" "teoria" 1767012164.51936 0
+  "/home/carlos/Descargas/ecommerce/Resumen_http/teoria.tex" 1767012163.24946 21761 b648370bba4d61008fa07b917194c52f ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -48,12 +48,12 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1766507587 5541377 0af08d58b046ada1f2a2c7d4825ab417 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1766507717 3635701 97255a21b10cff6f9d9fa6f4199a6a0d ""
   "/usr/local/texlive/2025/texmf.cnf" 1766507580.55742 455 5b996dcaa0eb4ef14a83b026bc0a008c ""
-  "build/teoria.aux" 1766520459.27268 1181 60140897778273273817c42ca19bd07e "pdflatex"
-  "images/Captura desde 2025-12-22 13-25-18.png" 1766527400 40777 fa2a0ab744774828910df1455f7e6b17 ""
-  "images/http-message-request.jpg" 1766527400 82608 af8402fcece74c88ec005823a828083a ""
-  "images/http-message-response.jpg" 1766527400 78697 f2492431ecdebd3eb5ea24bd85c8a30d ""
-  "images/uri url.png" 1766527400 75887 fa7b4223c71ff13b7944d247c72a8b0e ""
-  "teoria.tex" 1766520458.64467 19186 746e43c63ded40885eee25635575327f ""
+  "build/teoria.aux" 1767012164.46543 1405 fa0598ae26c29bfb71e54565bac6a4ce "pdflatex"
+  "images/Captura desde 2025-12-22 13-25-18.png" 1766849502.15185 40777 fa2a0ab744774828910df1455f7e6b17 ""
+  "images/http-message-request.jpg" 1766849502.15185 82608 af8402fcece74c88ec005823a828083a ""
+  "images/http-message-response.jpg" 1766849502.15185 78697 f2492431ecdebd3eb5ea24bd85c8a30d ""
+  "images/uri url.png" 1766849502.15585 75887 fa7b4223c71ff13b7944d247c72a8b0e ""
+  "teoria.tex" 1767012163.24946 21761 b648370bba4d61008fa07b917194c52f ""
   (generated)
   "build/teoria.aux"
   "build/teoria.log"

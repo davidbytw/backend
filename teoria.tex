@@ -10,7 +10,7 @@
 
 \maketitle
 
-\section*{Introducción}
+\section{Introducción}
 
 La capa de Aplicaciones es aquella que justifica la existencia de internet, tenemos
 los protocolos para utilizar aplicaciones de redes. Vamos a ver que servicios y arquitecturas usan.
@@ -391,5 +391,53 @@ Según la lógica de las filminas:
     \item Menor carga para el servidor web
     \item La caché sigue siendo consistente
 \end{itemize}
+
+\section{Una pequeña introduccion de API's}
+
+API viene de Interfaz de programación de aplicaciones. Y son un conjunto de reglas o protocolos que permiten a una aplicación informatica
+interactuar con otra. 
+Un ejemplo, imaginemos que quiero hacer un inicio de sesión en un navegador, ya que ingresé mi usuario
+\begin{enumerate}
+    \item Asumimos que ya tenemos una conexión TCP en este ejemplo.
+    \item Hago click en el navegador.
+    \item Se manda un mensaje de request por internet.
+    \item Llega a la API. Esta API le pregunta a la BDD si el usuario es correcto.
+    \item Si el mensaje es correcto, se genera un mensaje de respuesta diciendo que es correcto, si no es correcto se genera otro.
+\end{enumerate}
+
+Las API's pueden ser:
+
+\begin{itemize}
+    \item Privadas. 
+    \item Compartidas con un socio.
+    \item Publicas.
+\end{itemize}
+
+Pero ¿Cual es su necesidad?
+
+\begin{itemize}
+    \item Reducir esfuerzo manual: Imaginemos que hacemos una aplicación que muestra todos los tweets de un usuario en el pasado.
+    Debería tener que buscar todos los tweets nuevos cada cierto tiempo, y es mucho gasto. Para esto nos ayuda la API, esta nos dara información cada vez que la persona twittee.
+    \item Se automatiza todo: El sistema complejo se convierte en un conjunto de sistemas más chicos, los cuales operan todo el tiempo.
+\end{itemize}
+
+Las APIs HTTP (como las APIs REST) utilizan los métodos que conocemos de HTTP (GET, POST, PUT, DELETE) para operar sobre recursos.
+
+La intención de las APIs es permitir y automatizar la comunicación entre distintos sistemas a través de la red. En este contexto, se prefiere usar el protocolo HTTP para interactuar con recursos que se encuentran en otra computadora (o incluso en la misma), en lugar de utilizar llamadas directas a métodos como en el paradigma orientado a objetos.
+
+Esto se debe a que HTTP está diseñado para comunicación distribuida, desacoplada y estandarizada, mientras que los objetos y sus métodos están pensados para ejecutarse dentro del mismo proceso.
+
+En las operaciones de HTTP la intención es la siguiente:
+\begin{itemize}
+    \item GET: Se manda una consulta sobre el elemento que se ingresa en la URL. No debería cambiar nada en el servidor y deberia poder repetirse
+    sin consecuencias.
+    \item POST: Produce un nuevo recurso. Luego de cada llamada debería haber un nuevo recurso. Se envian datos en el body.
+    \item PUT: Modifica el estado de un recurso. Apunta a un recurso en especifico.
+    \item DELETE: Elimina un recurso en especifico.
+\end{itemize}
+
+
+
+
 
 \end{document}
